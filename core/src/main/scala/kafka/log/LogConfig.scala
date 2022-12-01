@@ -543,8 +543,8 @@ object LogConfig {
    */
   @nowarn("cat=deprecation")
   def extractLogConfigMap(
-                           kafkaConfig: KafkaConfig
-                         ): java.util.Map[String, Object] = {
+    kafkaConfig: KafkaConfig
+  ): java.util.Map[String, Object] = {
     val logProps = new java.util.HashMap[String, Object]()
     logProps.put(SegmentBytesProp, kafkaConfig.logSegmentBytes)
     logProps.put(SegmentMsProp, kafkaConfig.logRollTimeMillis)
@@ -588,15 +588,15 @@ object LogConfig {
     @nowarn("cat=deprecation")
     def topicWarningMessage(topicName: String): String = {
       s"Topic configuration ${LogConfig.MessageFormatVersionProp} with value `$messageFormatVersionString` is ignored " +
-        s"for `$topicName` because the inter-broker protocol version `$interBrokerProtocolVersionString` is " +
-        "greater or equal than 3.0. This configuration is deprecated and it will be removed in Apache Kafka 4.0."
+      s"for `$topicName` because the inter-broker protocol version `$interBrokerProtocolVersionString` is " +
+      "greater or equal than 3.0. This configuration is deprecated and it will be removed in Apache Kafka 4.0."
     }
 
     @nowarn("cat=deprecation")
     def brokerWarningMessage: String = {
       s"Broker configuration ${KafkaConfig.LogMessageFormatVersionProp} with value $messageFormatVersionString is ignored " +
-        s"because the inter-broker protocol version `$interBrokerProtocolVersionString` is greater or equal than 3.0. " +
-        "This configuration is deprecated and it will be removed in Apache Kafka 4.0."
+      s"because the inter-broker protocol version `$interBrokerProtocolVersionString` is greater or equal than 3.0. " +
+      "This configuration is deprecated and it will be removed in Apache Kafka 4.0."
     }
   }
 

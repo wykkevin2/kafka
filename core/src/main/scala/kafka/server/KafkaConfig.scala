@@ -1,19 +1,19 @@
 /**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+  * Licensed to the Apache Software Foundation (ASF) under one or more
+  * contributor license agreements.  See the NOTICE file distributed with
+  * this work for additional information regarding copyright ownership.
+  * The ASF licenses this file to You under the Apache License, Version 2.0
+  * (the "License"); you may not use this file except in compliance with
+  * the License.  You may obtain a copy of the License at
+  *
+  * http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
 
 package kafka.server
 
@@ -211,9 +211,6 @@ object Defaults {
   val TransactionsAbortTimedOutTransactionsCleanupIntervalMS = TransactionStateManager.DefaultAbortTimedOutTransactionsIntervalMs
   val TransactionsRemoveExpiredTransactionsCleanupIntervalMS = TransactionStateManager.DefaultRemoveExpiredTransactionalIdsIntervalMs
 
-  val ProducerIdExpirationMs = 86400000
-  val ProducerIdExpirationCheckIntervalMs = 600000
-
   /** ********* Fetch Configuration **************/
   val MaxIncrementalFetchSessionCacheSlots = 1000
   val FetchMaxBytes = 55 * 1024 * 1024
@@ -241,7 +238,6 @@ object Defaults {
   val MetricSampleWindowMs = 30000
   val MetricReporterClasses = ""
   val MetricRecordingLevel = Sensor.RecordingLevel.INFO.toString()
-  val AutoIncludeJmxReporter = true
 
 
   /** ********* Kafka Yammer Metrics Reporter Configuration ***********/
@@ -260,10 +256,10 @@ object Defaults {
   val SslClientAuthenticationValidValues = SslClientAuth.VALUES.asScala.map(v => v.toString().toLowerCase(Locale.ROOT)).asJava.toArray(new Array[String](0))
   val SslPrincipalMappingRules = BrokerSecurityConfigs.DEFAULT_SSL_PRINCIPAL_MAPPING_RULES
 
-  /** ********* General Security configuration ***********/
+    /** ********* General Security configuration ***********/
   val ConnectionsMaxReauthMsDefault = 0L
   val DefaultServerMaxMaxReceiveSize = BrokerSecurityConfigs.DEFAULT_SASL_SERVER_MAX_RECEIVE_SIZE
-  val DefaultPrincipalBuilder = classOf[DefaultKafkaPrincipalBuilder]
+  val DefaultPrincipalSerde = classOf[DefaultKafkaPrincipalBuilder]
 
   /** ********* Sasl configuration ***********/
   val SaslMechanismInterBrokerProtocol = SaslConfigs.DEFAULT_SASL_MECHANISM
@@ -366,7 +362,7 @@ object KafkaConfig {
           case _ => kafkaPropValue.toString
         }
         case _ => kafkaPropValue.toString
-      })
+    })
   }
 
   // For ZooKeeper TLS client authentication to be enabled the client must (at a minimum) configure itself as using TLS
@@ -539,9 +535,6 @@ object KafkaConfig {
   val TransactionsAbortTimedOutTransactionCleanupIntervalMsProp = "transaction.abort.timed.out.transaction.cleanup.interval.ms"
   val TransactionsRemoveExpiredTransactionalIdCleanupIntervalMsProp = "transaction.remove.expired.transaction.cleanup.interval.ms"
 
-  val ProducerIdExpirationMsProp = "producer.id.expiration.ms"
-  val ProducerIdExpirationCheckIntervalMsProp = "producer.id.expiration.check.interval.ms"
-
   /** ********* Fetch Configuration **************/
   val MaxIncrementalFetchSessionCacheSlots = "max.incremental.fetch.session.cache.slots"
   val FetchMaxBytes = "fetch.max.bytes"
@@ -565,9 +558,6 @@ object KafkaConfig {
   val MetricNumSamplesProp: String = CommonClientConfigs.METRICS_NUM_SAMPLES_CONFIG
   val MetricReporterClassesProp: String = CommonClientConfigs.METRIC_REPORTER_CLASSES_CONFIG
   val MetricRecordingLevelProp: String = CommonClientConfigs.METRICS_RECORDING_LEVEL_CONFIG
-  @deprecated
-  @nowarn("cat=deprecation")
-  val AutoIncludeJmxReporterProp: String = CommonClientConfigs.AUTO_INCLUDE_JMX_REPORTER_CONFIG
 
   /** ********* Kafka Yammer Metrics Reporters Configuration ***********/
   val KafkaMetricsReporterClassesProp = "kafka.metrics.reporters"
@@ -654,10 +644,10 @@ object KafkaConfig {
   /* Documentation */
   /** ********* Zookeeper Configuration ***********/
   val ZkConnectDoc = "Specifies the ZooKeeper connection string in the form <code>hostname:port</code> where host and port are the " +
-    "host and port of a ZooKeeper server. To allow connecting through other ZooKeeper nodes when that ZooKeeper machine is " +
-    "down you can also specify multiple hosts in the form <code>hostname1:port1,hostname2:port2,hostname3:port3</code>.\n" +
-    "The server can also have a ZooKeeper chroot path as part of its ZooKeeper connection string which puts its data under some path in the global ZooKeeper namespace. " +
-    "For example to give a chroot path of <code>/chroot/path</code> you would give the connection string as <code>hostname1:port1,hostname2:port2,hostname3:port3/chroot/path</code>."
+  "host and port of a ZooKeeper server. To allow connecting through other ZooKeeper nodes when that ZooKeeper machine is " +
+  "down you can also specify multiple hosts in the form <code>hostname1:port1,hostname2:port2,hostname3:port3</code>.\n" +
+  "The server can also have a ZooKeeper chroot path as part of its ZooKeeper connection string which puts its data under some path in the global ZooKeeper namespace. " +
+  "For example to give a chroot path of <code>/chroot/path</code> you would give the connection string as <code>hostname1:port1,hostname2:port2,hostname3:port3/chroot/path</code>."
   val ZkSessionTimeoutMsDoc = "Zookeeper session timeout"
   val ZkConnectionTimeoutMsDoc = "The max time that the client waits to establish a connection to zookeeper. If not set, the value in " + ZkSessionTimeoutMsProp + " is used"
   val ZkEnableSecureAclsDoc = "Set client to use secure ACLs"
@@ -701,8 +691,8 @@ object KafkaConfig {
   val BrokerIdGenerationEnableDoc = s"Enable automatic broker id generation on the server. When enabled the value configured for $MaxReservedBrokerIdProp should be reviewed."
   val MaxReservedBrokerIdDoc = "Max number that can be used for a broker.id"
   val BrokerIdDoc = "The broker id for this server. If unset, a unique broker id will be generated." +
-    "To avoid conflicts between zookeeper generated broker id's and user configured broker id's, generated broker ids " +
-    "start from " + MaxReservedBrokerIdProp + " + 1."
+  "To avoid conflicts between zookeeper generated broker id's and user configured broker id's, generated broker ids " +
+  "start from " + MaxReservedBrokerIdProp + " + 1."
   val MessageMaxBytesDoc = TopicConfig.MAX_MESSAGE_BYTES_DOC +
     s"This can be set per topic with the topic level <code>${TopicConfig.MAX_MESSAGE_BYTES_CONFIG}</code> config."
   val NumNetworkThreadsDoc = "The number of threads that the server uses for receiving requests from the network and sending responses to the network"
@@ -722,6 +712,7 @@ object KafkaConfig {
   val BrokerHeartbeatIntervalMsDoc = "The length of time in milliseconds between broker heartbeats. Used when running in KRaft mode."
   val BrokerSessionTimeoutMsDoc = "The length of time in milliseconds that a broker lease lasts if no heartbeats are made. Used when running in KRaft mode."
   val NodeIdDoc = "The node ID associated with the roles this process is playing when `process.roles` is non-empty. " +
+    "Every node in a KRaft cluster must have a unique `node.id`, this includes broker and controller nodes. " +
     "This is required configuration when running in KRaft mode."
   val MetadataLogDirDoc = "This configuration determines where we put the metadata log for clusters in KRaft mode. " +
     "If it is not set, the metadata log is placed in the first log directory from log.dirs."
@@ -746,9 +737,9 @@ object KafkaConfig {
   val AuthorizerClassNameDoc = s"The fully qualified name of a class that implements <code>${classOf[Authorizer].getName}</code>" +
     " interface, which is used by the broker for authorization."
   val EarlyStartListenersDoc = "A comma-separated list of listener names which may be started before the authorizer has finished " +
-    "initialization. This is useful when the authorizer is dependent on the cluster itself for bootstrapping, as is the case for " +
-    "the StandardAuthorizer (which stores ACLs in the metadata log.) By default, all listeners included in controller.listener.names " +
-    "will also be early start listeners. A listener should not appear in this list if it accepts external traffic."
+  "initialization. This is useful when the authorizer is dependent on the cluster itself for bootstrapping, as is the case for " +
+  "the StandardAuthorizer (which stores ACLs in the metadata log.) By default, all listeners included in controller.listener.names " +
+  "will also be early start listeners. A listener should not appear in this list if it accepts external traffic."
 
   /** ********* Socket Server Configuration ***********/
   val ListenersDoc = "Listener List - Comma-separated list of URIs we will listen on and the listener names." +
@@ -844,7 +835,7 @@ object KafkaConfig {
   val LogCleanerDedupeBufferSizeDoc = "The total memory used for log deduplication across all cleaner threads"
   val LogCleanerIoBufferSizeDoc = "The total memory used for log cleaner I/O buffers across all cleaner threads"
   val LogCleanerDedupeBufferLoadFactorDoc = "Log cleaner dedupe buffer load factor. The percentage full the dedupe buffer can become. A higher value " +
-    "will allow more log to be cleaned at once but will lead to more hash collisions"
+  "will allow more log to be cleaned at once but will lead to more hash collisions"
   val LogCleanerBackoffMsDoc = "The amount of time to sleep when there are no logs to clean"
   val LogCleanerMinCleanRatioDoc = "The minimum ratio of dirty log to total log for a log to eligible for cleaning. " +
     "If the " + LogCleanerMaxCompactionLagMsProp + " or the " + LogCleanerMinCompactionLagMsProp +
@@ -902,7 +893,7 @@ object KafkaConfig {
   val ControllerMessageQueueSizeDoc = "The buffer size for controller-to-broker-channels"
   val DefaultReplicationFactorDoc = "The default replication factors for automatically created topics"
   val ReplicaLagTimeMaxMsDoc = "If a follower hasn't sent any fetch requests or hasn't consumed up to the leaders log end offset for at least this time," +
-    " the leader will remove the follower from isr"
+  " the leader will remove the follower from isr"
   val ReplicaSocketTimeoutMsDoc = "The socket timeout for network requests. Its value should be at least replica.fetch.wait.max.ms"
   val ReplicaSocketReceiveBufferBytesDoc = "The socket receive buffer for network requests"
   val ReplicaFetchMaxBytesDoc = "The number of bytes of messages to attempt to fetch for each partition. This is not an absolute maximum, " +
@@ -910,7 +901,7 @@ object KafkaConfig {
     "to ensure that progress can be made. The maximum record batch size accepted by the broker is defined via " +
     "<code>message.max.bytes</code> (broker config) or <code>max.message.bytes</code> (topic config)."
   val ReplicaFetchWaitMaxMsDoc = "The maximum wait time for each fetcher request issued by follower replicas. This value should always be less than the " +
-    "replica.lag.time.max.ms at all times to prevent frequent shrinking of ISR for low throughput topics"
+  "replica.lag.time.max.ms at all times to prevent frequent shrinking of ISR for low throughput topics"
   val ReplicaFetchMinBytesDoc = "Minimum bytes expected for each fetch response. If not enough bytes, wait up to <code>replica.fetch.wait.max.ms</code> (broker config)."
   val ReplicaFetchResponseMaxBytesDoc = "Maximum bytes expected for the entire fetch response. Records are fetched in batches, " +
     "and if the first record batch in the first non-empty partition of the fetch is larger than this value, the record batch " +
@@ -918,9 +909,9 @@ object KafkaConfig {
     "record batch size accepted by the broker is defined via <code>message.max.bytes</code> (broker config) or " +
     "<code>max.message.bytes</code> (topic config)."
   val NumReplicaFetchersDoc = "Number of fetcher threads used to replicate records from each source broker. The total number of fetchers " +
-    "on each broker is bound by <code>num.replica.fetchers</code> multiplied by the number of brokers in the cluster." +
-    "Increasing this value can increase the degree of I/O parallelism in the follower and leader broker at the cost " +
-    "of higher CPU and memory utilization."
+  "on each broker is bound by <code>num.replica.fetchers</code> multiplied by the number of brokers in the cluster." +
+  "Increasing this value can increase the degree of I/O parallelism in the follower and leader broker at the cost " +
+  "of higher CPU and memory utilization."
   val ReplicaFetchBackoffMsDoc = "The amount of time to sleep when fetch partition error occurs."
   val ReplicaHighWatermarkCheckpointIntervalMsDoc = "The frequency with which the high watermark is saved out to disk"
   val FetchPurgatoryPurgeIntervalRequestsDoc = "The purge interval (in number of requests) of the fetch request purgatory"
@@ -934,8 +925,8 @@ object KafkaConfig {
     s"${SecurityProtocol.names.asScala.mkString(", ")}. It is an error to set this and $InterBrokerListenerNameProp " +
     "properties at the same time."
   val InterBrokerProtocolVersionDoc = "Specify which version of the inter-broker protocol will be used.\n" +
-    " This is typically bumped after all brokers were upgraded to a new version.\n" +
-    " Example of some valid values are: 0.8.0, 0.8.1, 0.8.1.1, 0.8.2, 0.8.2.0, 0.8.2.1, 0.9.0.0, 0.9.0.1 Check MetadataVersion for the full list."
+  " This is typically bumped after all brokers were upgraded to a new version.\n" +
+  " Example of some valid values are: 0.8.0, 0.8.1, 0.8.1.1, 0.8.2, 0.8.2.0, 0.8.2.1, 0.9.0.0, 0.9.0.1 Check MetadataVersion for the full list."
   val InterBrokerListenerNameDoc = s"Name of listener used for communication between brokers. If this is unset, the listener name is defined by $InterBrokerSecurityProtocolProp. " +
     s"It is an error to set this and $InterBrokerSecurityProtocolProp properties at the same time."
   val ReplicaSelectorClassDoc = "The fully qualified class name that implements ReplicaSelector. This is used by the broker to find the preferred read replica. By default, we use an implementation that returns the leader."
@@ -952,22 +943,20 @@ object KafkaConfig {
   val OffsetMetadataMaxSizeDoc = "The maximum size for a metadata entry associated with an offset commit"
   val OffsetsLoadBufferSizeDoc = "Batch size for reading from the offsets segments when loading offsets into the cache (soft-limit, overridden if records are too large)."
   val OffsetsTopicReplicationFactorDoc = "The replication factor for the offsets topic (set higher to ensure availability). " +
-    "Internal topic creation will fail until the cluster size meets this replication factor requirement."
+  "Internal topic creation will fail until the cluster size meets this replication factor requirement."
   val OffsetsTopicPartitionsDoc = "The number of partitions for the offset commit topic (should not change after deployment)"
   val OffsetsTopicSegmentBytesDoc = "The offsets topic segment bytes should be kept relatively small in order to facilitate faster log compaction and cache loads"
   val OffsetsTopicCompressionCodecDoc = "Compression codec for the offsets topic - compression may be used to achieve \"atomic\" commits"
-  val OffsetsRetentionMinutesDoc = "For subscribed consumers, committed offset of a specific partition will be expired and discarded when 1) this retention period has elapsed after the consumer group loses all its consumers (i.e. becomes empty); " +
-    "2) this retention period has elapsed since the last time an offset is committed for the partition and the group is no longer subscribed to the corresponding topic. " +
-    "For standalone consumers (using manual assignment), offsets will be expired after this retention period has elapsed since the time of last commit. " +
-    "Note that when a group is deleted via the delete-group request, its committed offsets will also be deleted without extra retention period; " +
-    "also when a topic is deleted via the delete-topic request, upon propagated metadata update any group's committed offsets for that topic will also be deleted without extra retention period."
+  val OffsetsRetentionMinutesDoc = "After a consumer group loses all its consumers (i.e. becomes empty) its offsets will be kept for this retention period before getting discarded. " +
+    "For standalone consumers (using manual assignment), offsets will be expired after the time of last commit plus this retention period."
   val OffsetsRetentionCheckIntervalMsDoc = "Frequency at which to check for stale offsets"
   val OffsetCommitTimeoutMsDoc = "Offset commit will be delayed until all replicas for the offsets topic receive the commit " +
-    "or this timeout is reached. This is similar to the producer request timeout."
+  "or this timeout is reached. This is similar to the producer request timeout."
   val OffsetCommitRequiredAcksDoc = "The required acks before the commit can be accepted. In general, the default (-1) should not be overridden"
   /** ********* Transaction management configuration ***********/
   val TransactionalIdExpirationMsDoc = "The time in ms that the transaction coordinator will wait without receiving any transaction status updates " +
-    "for the current transaction before expiring its transactional id. Transactional IDs will not expire while a the transaction is still ongoing."
+    "for the current transaction before expiring its transactional id. This setting also influences producer id expiration - producer ids are expired " +
+    "once this time has elapsed after the last write with the given producer id. Note that producer ids may expire sooner if the last write from the producer id is deleted due to the topic's retention settings."
   val TransactionsMaxTimeoutMsDoc = "The maximum allowed timeout for transactions. " +
     "If a client’s requested transaction time exceed this, then the broker will return an error in InitProducerIdRequest. This prevents a client from too large of a timeout, which can stall consumers reading from topics included in the transaction."
   val TransactionsTopicMinISRDoc = "Overridden " + MinInSyncReplicasProp + " config for the transaction topic."
@@ -978,11 +967,6 @@ object KafkaConfig {
   val TransactionsTopicSegmentBytesDoc = "The transaction topic segment bytes should be kept relatively small in order to facilitate faster log compaction and cache loads"
   val TransactionsAbortTimedOutTransactionsIntervalMsDoc = "The interval at which to rollback transactions that have timed out"
   val TransactionsRemoveExpiredTransactionsIntervalMsDoc = "The interval at which to remove transactions that have expired due to <code>transactional.id.expiration.ms</code> passing"
-
-  val ProducerIdExpirationMsDoc = "The time in ms that a topic partition leader will wait before expiring producer IDs. Producer IDs will not expire while a transaction associated to them is still ongoing. " +
-    "Note that producer IDs may expire sooner if the last write from the producer ID is deleted due to the topic's retention settings. Setting this value the same or higher than " +
-    "<code>delivery.timeout.ms</code> can help prevent expiration during retries and protect against message duplication, but the default should be reasonable for most use cases."
-  val ProducerIdExpirationCheckIntervalMsDoc = "The interval at which to remove producer IDs that have expired due to <code>producer.id.expiration.ms</code> passing"
 
   /** ********* Fetch Configuration **************/
   val MaxIncrementalFetchSessionCacheSlotsDoc = "The maximum number of incremental fetch sessions that we will maintain."
@@ -1005,15 +989,14 @@ object KafkaConfig {
 
   val DeleteTopicEnableDoc = "Enables delete topic. Delete topic through the admin tool will have no effect if this config is turned off"
   val CompressionTypeDoc = "Specify the final compression type for a given topic. This configuration accepts the standard compression codecs " +
-    "('gzip', 'snappy', 'lz4', 'zstd'). It additionally accepts 'uncompressed' which is equivalent to no compression; and " +
-    "'producer' which means retain the original compression codec set by the producer."
+  "('gzip', 'snappy', 'lz4', 'zstd'). It additionally accepts 'uncompressed' which is equivalent to no compression; and " +
+  "'producer' which means retain the original compression codec set by the producer."
 
   /** ********* Kafka Metrics Configuration ***********/
   val MetricSampleWindowMsDoc = CommonClientConfigs.METRICS_SAMPLE_WINDOW_MS_DOC
   val MetricNumSamplesDoc = CommonClientConfigs.METRICS_NUM_SAMPLES_DOC
   val MetricReporterClassesDoc = CommonClientConfigs.METRIC_REPORTER_CLASSES_DOC
   val MetricRecordingLevelDoc = CommonClientConfigs.METRICS_RECORDING_LEVEL_DOC
-  val AutoIncludeJmxReporterDoc = CommonClientConfigs.AUTO_INCLUDE_JMX_REPORTER_DOC
 
 
   /** ********* Kafka Yammer Metrics Reporter Configuration ***********/
@@ -1309,10 +1292,6 @@ object KafkaConfig {
       .define(TransactionsAbortTimedOutTransactionCleanupIntervalMsProp, INT, Defaults.TransactionsAbortTimedOutTransactionsCleanupIntervalMS, atLeast(1), LOW, TransactionsAbortTimedOutTransactionsIntervalMsDoc)
       .define(TransactionsRemoveExpiredTransactionalIdCleanupIntervalMsProp, INT, Defaults.TransactionsRemoveExpiredTransactionsCleanupIntervalMS, atLeast(1), LOW, TransactionsRemoveExpiredTransactionsIntervalMsDoc)
 
-      .define(ProducerIdExpirationMsProp, INT, Defaults.ProducerIdExpirationMs, atLeast(1), LOW, ProducerIdExpirationMsDoc)
-      // Configuration for testing only as default value should be sufficient for typical usage
-      .defineInternal(ProducerIdExpirationCheckIntervalMsProp, INT, Defaults.ProducerIdExpirationCheckIntervalMs, atLeast(1), LOW, ProducerIdExpirationMsDoc)
-
       /** ********* Fetch Configuration **************/
       .define(MaxIncrementalFetchSessionCacheSlots, INT, Defaults.MaxIncrementalFetchSessionCacheSlots, atLeast(0), MEDIUM, MaxIncrementalFetchSessionCacheSlotsDoc)
       .define(FetchMaxBytes, INT, Defaults.FetchMaxBytes, atLeast(1024), MEDIUM, FetchMaxBytesDoc)
@@ -1322,7 +1301,6 @@ object KafkaConfig {
       .define(MetricSampleWindowMsProp, LONG, Defaults.MetricSampleWindowMs, atLeast(1), LOW, MetricSampleWindowMsDoc)
       .define(MetricReporterClassesProp, LIST, Defaults.MetricReporterClasses, LOW, MetricReporterClassesDoc)
       .define(MetricRecordingLevelProp, STRING, Defaults.MetricRecordingLevel, LOW, MetricRecordingLevelDoc)
-      .define(AutoIncludeJmxReporterProp, BOOLEAN, Defaults.AutoIncludeJmxReporter, LOW, AutoIncludeJmxReporterDoc)
 
       /** ********* Kafka Yammer Metrics Reporter Configuration for docs ***********/
       .define(KafkaMetricsReporterClassesProp, LIST, Defaults.KafkaMetricReporterClasses, LOW, KafkaMetricsReporterClassesDoc)
@@ -1345,7 +1323,7 @@ object KafkaConfig {
       .define(securityProviderClassProp, STRING, null, LOW, securityProviderClassDoc)
 
       /** ********* SSL Configuration ****************/
-      .define(PrincipalBuilderClassProp, CLASS, Defaults.DefaultPrincipalBuilder, MEDIUM, PrincipalBuilderClassDoc)
+      .define(PrincipalBuilderClassProp, CLASS, Defaults.DefaultPrincipalSerde, MEDIUM, PrincipalBuilderClassDoc)
       .define(SslProtocolProp, STRING, Defaults.SslProtocol, MEDIUM, SslProtocolDoc)
       .define(SslProviderProp, STRING, null, MEDIUM, SslProviderDoc)
       .define(SslEnabledProtocolsProp, LIST, Defaults.SslEnabledProtocols, MEDIUM, SslEnabledProtocolsDoc)
@@ -1464,7 +1442,7 @@ object KafkaConfig {
     stacktrace
   }
 
-  def apply(props: java.util.Map[_, _], doLog: Boolean = true) = new KafkaConfig(props, doLog)
+  def apply(props: java.util.Map[_, _], doLog: Boolean = true): KafkaConfig = new KafkaConfig(props, doLog)
 
   private def typeOf(name: String): Option[ConfigDef.Type] = Option(configDef.configKeys.get(name)).map(_.`type`)
 
@@ -2342,15 +2320,6 @@ class KafkaConfig private(doLog: Boolean, val props: java.util.Map[_, _], dynami
     getInt(KafkaConfig.TransactionsRemoveExpiredTransactionalIdCleanupIntervalMsProp)
   }
 
-  def producerIdExpirationMs = {
-    logger.info("[CTEST][GET-PARAM] " + KafkaConfig.ProducerIdExpirationMsProp)
-    getInt(KafkaConfig.ProducerIdExpirationMsProp)
-  }
-  def producerIdExpirationCheckIntervalMs = {
-    logger.info("[CTEST][GET-PARAM] " + KafkaConfig.ProducerIdExpirationCheckIntervalMsProp)
-    getInt(KafkaConfig.ProducerIdExpirationCheckIntervalMsProp)
-  }
-
   /** ********* Metric Configuration **************/
   def metricNumSamples = {
     logger.info("[CTEST][GET-PARAM] " + KafkaConfig.MetricNumSamplesProp)
@@ -2850,12 +2819,12 @@ class KafkaConfig private(doLog: Boolean, val props: java.util.Map[_, _], dynami
     val recordVersion = logMessageFormatVersion.highestSupportedRecordVersion
     require(interBrokerProtocolVersion.highestSupportedRecordVersion().value >= recordVersion.value,
       s"log.message.format.version $logMessageFormatVersionString can only be used when inter.broker.protocol.version " +
-        s"is set to version ${MetadataVersion.minSupportedFor(recordVersion).shortVersion} or higher")
+      s"is set to version ${MetadataVersion.minSupportedFor(recordVersion).shortVersion} or higher")
 
     if (offsetsTopicCompressionCodec == ZStdCompressionCodec)
       require(interBrokerProtocolVersion.highestSupportedRecordVersion().value >= IBP_2_1_IV0.highestSupportedRecordVersion().value,
         "offsets.topic.compression.codec zstd can only be used when inter.broker.protocol.version " +
-          s"is set to version ${IBP_2_1_IV0.shortVersion} or higher")
+        s"is set to version ${IBP_2_1_IV0.shortVersion} or higher")
 
     val interBrokerUsesSasl = interBrokerSecurityProtocol == SecurityProtocol.SASL_PLAINTEXT || interBrokerSecurityProtocol == SecurityProtocol.SASL_SSL
     require(!interBrokerUsesSasl || saslInterBrokerHandshakeRequestEnable || saslMechanismInterBrokerProtocol == SaslConfigs.GSSAPI_MECHANISM,
@@ -2876,8 +2845,8 @@ class KafkaConfig private(doLog: Boolean, val props: java.util.Map[_, _], dynami
     if (connectionsMaxIdleMs >= 0)
       require(failedAuthenticationDelayMs < connectionsMaxIdleMs,
         s"${KafkaConfig.FailedAuthenticationDelayMsProp}=$failedAuthenticationDelayMs should always be less than" +
-          s" ${KafkaConfig.ConnectionsMaxIdleMsProp}=$connectionsMaxIdleMs to prevent failed" +
-          s" authentication responses from timing out")
+        s" ${KafkaConfig.ConnectionsMaxIdleMsProp}=$connectionsMaxIdleMs to prevent failed" +
+        s" authentication responses from timing out")
 
     val principalBuilderClass = getClass(KafkaConfig.PrincipalBuilderClassProp)
     require(principalBuilderClass != null, s"${KafkaConfig.PrincipalBuilderClassProp} must be non-null")
