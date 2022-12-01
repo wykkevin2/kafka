@@ -737,9 +737,9 @@ object KafkaConfig {
   val AuthorizerClassNameDoc = s"The fully qualified name of a class that implements <code>${classOf[Authorizer].getName}</code>" +
     " interface, which is used by the broker for authorization."
   val EarlyStartListenersDoc = "A comma-separated list of listener names which may be started before the authorizer has finished " +
-  "initialization. This is useful when the authorizer is dependent on the cluster itself for bootstrapping, as is the case for " +
-  "the StandardAuthorizer (which stores ACLs in the metadata log.) By default, all listeners included in controller.listener.names " +
-  "will also be early start listeners. A listener should not appear in this list if it accepts external traffic."
+   "initialization. This is useful when the authorizer is dependent on the cluster itself for bootstrapping, as is the case for " +
+   "the StandardAuthorizer (which stores ACLs in the metadata log.) By default, all listeners included in controller.listener.names " +
+   "will also be early start listeners. A listener should not appear in this list if it accepts external traffic."
 
   /** ********* Socket Server Configuration ***********/
   val ListenersDoc = "Listener List - Comma-separated list of URIs we will listen on and the listener names." +
@@ -2613,7 +2613,7 @@ class KafkaConfig private(doLog: Boolean, val props: java.util.Map[_, _], dynami
         Some(listenerName, securityProtocol)
 
       case None => None
-    }
+   }
   }
 
   private def getSecurityProtocol(protocolName: String, configName: String): SecurityProtocol = {
@@ -2799,17 +2799,17 @@ class KafkaConfig private(doLog: Boolean, val props: java.util.Map[_, _], dynami
 
     require(!effectiveAdvertisedListeners.exists(endpoint => endpoint.host=="0.0.0.0"),
       s"${KafkaConfig.AdvertisedListenersProp} cannot use the nonroutable meta-address 0.0.0.0. "+
-        s"Use a routable IP address.")
+      s"Use a routable IP address.")
 
     // validate control.plane.listener.name config
     if (controlPlaneListenerName.isDefined) {
       require(advertisedListenerNames.contains(controlPlaneListenerName.get),
         s"${KafkaConfig.ControlPlaneListenerNameProp} must be a listener name defined in ${KafkaConfig.AdvertisedListenersProp}. " +
-          s"The valid options based on currently configured listeners are ${advertisedListenerNames.map(_.value).mkString(",")}")
+        s"The valid options based on currently configured listeners are ${advertisedListenerNames.map(_.value).mkString(",")}")
       // controlPlaneListenerName should be different from interBrokerListenerName
       require(!controlPlaneListenerName.get.value().equals(interBrokerListenerName.value()),
         s"${KafkaConfig.ControlPlaneListenerNameProp}, when defined, should have a different value from the inter broker listener name. " +
-          s"Currently they both have the value ${controlPlaneListenerName.get}")
+        s"Currently they both have the value ${controlPlaneListenerName.get}")
     }
 
     val messageFormatVersion = new MessageFormatVersion(logMessageFormatVersionString, interBrokerProtocolVersionString)
