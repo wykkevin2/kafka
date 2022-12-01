@@ -286,6 +286,7 @@ object LogConfig {
                importance: ConfigDef.Importance, doc: String, serverDefaultConfigName: String): LogConfigDef = {
       super.define(name, defType, defaultValue, validator, importance, doc)
       serverDefaultConfigNames.put(name, serverDefaultConfigName)
+      println("[CTEST][SET-PARAM] " + serverDefaultConfigName + getStackTrace)
       this
     }
 
@@ -293,6 +294,7 @@ object LogConfig {
                documentation: String, serverDefaultConfigName: String): LogConfigDef = {
       super.define(name, defType, defaultValue, importance, documentation)
       serverDefaultConfigNames.put(name, serverDefaultConfigName)
+      println("[CTEST][SET-PARAM] " + serverDefaultConfigName + getStackTrace)
       this
     }
 
@@ -300,7 +302,16 @@ object LogConfig {
                serverDefaultConfigName: String): LogConfigDef = {
       super.define(name, defType, importance, documentation)
       serverDefaultConfigNames.put(name, serverDefaultConfigName)
+      println("[CTEST][SET-PARAM] " + serverDefaultConfigName + getStackTrace)
       this
+    }
+
+    def getStackTrace: String = {
+      var stacktrace = " "
+      for (element <- Thread.currentThread.getStackTrace) {
+        stacktrace = stacktrace.concat(element.getClassName + "#")
+      }
+      stacktrace
     }
 
     override def headers = List("Name", "Description", "Type", "Default", "Valid Values", ServerDefaultHeaderName,
@@ -532,8 +543,8 @@ object LogConfig {
    */
   @nowarn("cat=deprecation")
   def extractLogConfigMap(
-    kafkaConfig: KafkaConfig
-  ): java.util.Map[String, Object] = {
+                           kafkaConfig: KafkaConfig
+                         ): java.util.Map[String, Object] = {
     val logProps = new java.util.HashMap[String, Object]()
     logProps.put(SegmentBytesProp, kafkaConfig.logSegmentBytes)
     logProps.put(SegmentMsProp, kafkaConfig.logRollTimeMillis)
@@ -577,15 +588,15 @@ object LogConfig {
     @nowarn("cat=deprecation")
     def topicWarningMessage(topicName: String): String = {
       s"Topic configuration ${LogConfig.MessageFormatVersionProp} with value `$messageFormatVersionString` is ignored " +
-      s"for `$topicName` because the inter-broker protocol version `$interBrokerProtocolVersionString` is " +
-      "greater or equal than 3.0. This configuration is deprecated and it will be removed in Apache Kafka 4.0."
+        s"for `$topicName` because the inter-broker protocol version `$interBrokerProtocolVersionString` is " +
+        "greater or equal than 3.0. This configuration is deprecated and it will be removed in Apache Kafka 4.0."
     }
 
     @nowarn("cat=deprecation")
     def brokerWarningMessage: String = {
       s"Broker configuration ${KafkaConfig.LogMessageFormatVersionProp} with value $messageFormatVersionString is ignored " +
-      s"because the inter-broker protocol version `$interBrokerProtocolVersionString` is greater or equal than 3.0. " +
-      "This configuration is deprecated and it will be removed in Apache Kafka 4.0."
+        s"because the inter-broker protocol version `$interBrokerProtocolVersionString` is greater or equal than 3.0. " +
+        "This configuration is deprecated and it will be removed in Apache Kafka 4.0."
     }
   }
 
