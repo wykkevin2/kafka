@@ -502,6 +502,7 @@ public class ConfigDef {
         Object parsedValue;
         if (isSet) {
             parsedValue = parseType(key.name, value, key.type);
+        // props map doesn't contain setting, the key is required because no default value specified - its an error
         } else if (NO_DEFAULT_VALUE.equals(key.defaultValue) && !shouldIgnoreErrors) {
             throw new ConfigException("Missing required configuration \"" + key.name + "\" which has no default value.");
         } else {
